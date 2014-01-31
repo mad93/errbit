@@ -86,6 +86,11 @@ namespace :unicorn do
     "`cat #{path}/unicorn.pid`"
   end
 
+  dec 'Starts unicorn'
+  task :start, :roles => :app, :except => { :no_release => true } do
+    run "cd #{current_path} && bundle exec unicorn -c #{deploy_to}/current/config/unicorn.rb -l unix://#{deploy_to}/shared/system.sock -E production -D"
+  end
+    
   desc 'Reload unicorn'
   task :reload, :roles => :app, :except => { :no_release => true } do
     run "kill -HUP #{unicorn_pid}"
